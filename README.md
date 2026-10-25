@@ -10,7 +10,15 @@ Single `index.html`, Three.js loaded from a CDN, no build step.
 
 **Controls:** WASD to walk, Shift to run, drag to look, scroll to zoom, R to cycle rain. On touch, drag on the left half of the screen to walk.
 
-## Neon Circuit (`/drive/`)
+## Neon Circuit + Clover Hill Rally (`/drive/`)
+
+Two levels, picked on the start card (your last choice is remembered):
+- **Neon Circuit**: a night street circuit in the neon city.
+- **Clover Hill Rally**: a gravel stage through the Clover Hill farmland at golden hour: rolling hills the car pitches and rolls over, wind-blown grass, hay bales and chevron boards on the corners, the red barn and silo, the pond, and paddocks of grazing cows and sheep. Loose gravel grip, slower grass off the road, solid trees and bales, dust trails and gravel crunch; the car gets a rally light pod and mud flaps.
+
+Live at https://erictempleton1.github.io/cyber-alley/drive/ (add `?level=rally` to jump straight to the rally stage).
+
+### Neon Circuit details
 
 A night street-circuit driving game in the same neon city, starring a boxy late-80s E30 M3: box flares, trunk wing, quad round headlights and cross-spoke wheels. Live at https://erictempleton1.github.io/cyber-alley/drive/
 
