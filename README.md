@@ -12,11 +12,12 @@ Single `index.html`, Three.js loaded from a CDN, no build step.
 
 ## Neon Circuit + Clover Hill Rally (`/drive/`)
 
-Two levels, picked on the start card (your last choice is remembered):
+Three levels, picked on the start card (your last choice is remembered):
 - **Neon Circuit**: a night street circuit in the neon city.
+- **Alpine Pass**: a 1.6 km mountain road that climbs and dips around a central peak: rock faces, an avalanche-gallery tunnel, valley lakes, pines, snowy peaks and mountain goats. Armco on the drop side and a stone wall on the mountain side keep you on the road.
 - **Clover Hill Rally**: a gravel stage through the Clover Hill farmland at golden hour: rolling hills the car pitches and rolls over, wind-blown grass, hay bales and chevron boards on the corners, the red barn and silo, the pond, and paddocks of grazing cows and sheep. Loose gravel grip, slower grass off the road, solid trees and bales, dust trails and gravel crunch; the car gets a rally light pod and mud flaps.
 
-Live at https://erictempleton1.github.io/cyber-alley/drive/ (add `?level=rally` to jump straight to the rally stage).
+Live at https://erictempleton1.github.io/cyber-alley/drive/ (add `?level=rally` or `?level=alpine` to jump straight to a level).
 
 ### Neon Circuit details
 
