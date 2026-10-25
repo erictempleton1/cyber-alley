@@ -620,7 +620,7 @@ function makeCar(){
 const CAR=makeCar();
 
 /* ---------------- physics ---------------- */
-const SPEC={m:1250,a:1.2,b:1.36,L:2.56,h:0.48,Iz:1850,rw:0.31,g:[3.72,2.40,1.77,1.26,1.00],gr:4.23,fd:4.10,idle:900,red:7250,lim:7350};
+const SPEC={m:1250,a:1.2,b:1.36,L:2.56,h:0.48,Iz:1550,rw:0.31,g:[3.72,2.40,1.77,1.26,1.00],gr:4.23,fd:4.10,idle:900,red:7250,lim:7350};
 const TQ=[[0,110],[1000,160],[2000,192],[3000,214],[4000,232],[4750,240],[5500,236],[6500,222],[7250,204],[7600,150]];
 function torque(r){for(let i=1;i<TQ.length;i++)if(r<=TQ[i][0]){const [r0,t0]=TQ[i-1],[r1,t1]=TQ[i];return t0+(t1-t0)*(r-r0)/(r1-r0);}return 150;}
 const ratio=g=>g>0?SPEC.g[g-1]*SPEC.fd:g<0?SPEC.gr*SPEC.fd:0;
@@ -643,8 +643,8 @@ function step(dt,inp){
   }
   if(car.gear<0&&!manual){const t=thr;thr=brk;brk=t;}
   /* steering, less lock at speed */
-  const maxS=0.6/(1+Math.pow(av/17,1.3));
-  car.steer+=(inp.steer*maxS-car.steer)*Math.min(1,dt*9);
+  const maxS=0.6/(1+Math.pow(av/20,1.3));
+  car.steer+=(inp.steer*maxS-car.steer)*Math.min(1,dt*20);
   const dl=car.steer,R_=ratio(car.gear),dir=car.gear<0?-1:1;
   /* engine speed from the wheels, with clutch slip at launch */
   const rpmW=Math.abs(v/S.rw*9.549*R_);
@@ -669,7 +669,7 @@ function step(dt,inp){
   const aF=Math.atan2(car.vy+S.a*car.wr,vxs)-dl*(v>=0?1:-1);
   const aR=Math.atan2(car.vy-S.b*car.wr,vxs);
   const use=Math.min(1,Math.abs(Fx)/capR),latR=Math.sqrt(Math.max(assist?0.3:0.06,1-use*use*(assist?0.6:0.82)))*(inp.hb?0.42:1);
-  const Fyf=-grip*Nf*Math.sin(1.55*Math.atan(7*aF)),Fyr=-grip*Nr*1.04*latR*Math.sin(1.6*Math.atan(10.5*aR));
+  const Fyf=-grip*Nf*Math.sin(1.55*Math.atan(8.5*aF)),Fyr=-grip*Nr*1.04*latR*Math.sin(1.6*Math.atan(10.5*aR));
   const aLong=(Fx+Fbr+Fdrag-Fyf*Math.sin(dl))/S.m;
   const ax=aLong+car.vy*car.wr,ay=(Fyf*Math.cos(dl)+Fyr)/S.m-car.vx*car.wr,wa=(S.a*Fyf*Math.cos(dl)-S.b*Fyr)/S.Iz-(esc?(yawErr-Math.sign(yawErr)*0.1)*7:0);
   car.vx+=ax*dt;car.vy+=ay*dt;car.wr+=wa*dt;
@@ -698,7 +698,7 @@ function autoInput(dt){
   const dx=tx-car.x,dz=tz-car.z,s=Math.sin(car.yaw),c=Math.cos(car.yaw);
   const fwd=dx*s+dz*c,left=dx*c-dz*s,alpha=Math.atan2(left,fwd);
   const dl=Math.atan(2*SPEC.L*Math.sin(alpha)/Math.hypot(dx,dz));
-  const maxS=0.6/(1+Math.pow(Math.abs(v)/17,1.3));
+  const maxS=0.6/(1+Math.pow(Math.abs(v)/20,1.3));
   let vt=70;const look=Math.round(170/DS);for(let k=0;k<look;k++){const kk=Math.max(Math.abs(TR[(car.idx+k)%NS].k),1e-4),vl=Math.sqrt(grip*9.81*0.8/kk);vt=Math.min(vt,Math.sqrt(vl*vl+2*6.5*grip*k*DS));}
   if(Math.abs(v)<0.8&&car.gear>=0){apStuck+=dt;if(apStuck>1.2){apStuck=0;apRev=1.6;const now=performance.now();apResets=apResets.filter(t=>now-t<12000);apResets.push(now);if(apResets.length>3){placeCar(car.idx);apResets=[];}}}else apStuck=0;
   return {steer:clamp(dl/maxS,-1,1),thr:v<vt-1.5?1:v<vt?0.4:0,brk:v>vt+2?clamp((v-vt)/8,0.2,1):0,hb:false};
@@ -784,9 +784,9 @@ for(const id of ['L','R','Gas','Brk']){const b=document.getElementById('t'+id);
 
 function readInput(dt){
   let thr=(keys.w||keys.arrowup||tbtn.Gas)?1:0,brk=(keys.s||keys.arrowdown||tbtn.Brk)?1:0,st=((keys.a||keys.arrowleft||tbtn.L)?1:0)-((keys.d||keys.arrowright||tbtn.R)?1:0),hb=!!keys[' '];
-  const rate=st?2.6:5;steerK+=clamp(st-steerK,-rate*dt,rate*dt);let steer=steerK;
+  const rate=st?(Math.sign(st)!==Math.sign(steerK)&&steerK?12:7):10;steerK+=clamp(st-steerK,-rate*dt,rate*dt);let steer=steerK;
   const gp=navigator.getGamepads?[...navigator.getGamepads()].find(g=>g&&g.connected):null;
-  if(gp){const sx=gp.axes[0]||0;if(Math.abs(sx)>0.08){steer=-Math.sign(sx)*Math.pow(Math.abs(sx),1.4);}const rt=gp.buttons[7]?.value||0,lt=gp.buttons[6]?.value||0;thr=Math.max(thr,rt);brk=Math.max(brk,lt);hb=hb||!!gp.buttons[0]?.pressed;
+  if(gp){const sx=gp.axes[0]||0;if(Math.abs(sx)>0.08){steer=-Math.sign(sx)*Math.pow(Math.abs(sx),1.15);}const rt=gp.buttons[7]?.value||0,lt=gp.buttons[6]?.value||0;thr=Math.max(thr,rt);brk=Math.max(brk,lt);hb=hb||!!gp.buttons[0]?.pressed;
     if(Math.abs(sx)>0.2||rt>0.1||lt>0.1)setAuto(false);
     const up=gp.buttons[5]?.pressed,dn=gp.buttons[4]?.pressed;if(manual){if(up&&!readInput.up){car.gear=Math.min(5,car.gear+1);car.shift=0.15;}if(dn&&!readInput.dn){car.gear=Math.max(-1,car.gear-1);car.shift=0.12;}}readInput.up=up;readInput.dn=dn;}
   if(anyDrive())setAuto(false);
@@ -861,7 +861,7 @@ const camPos=new THREE.Vector3(),camLook=new THREE.Vector3(),tmp=new THREE.Vecto
 function updateCamera(dt){
   const s=Math.sin(car.yaw),c=Math.cos(car.yaw),av=Math.abs(car.vx);
   const vw=Math.atan2(car.vx*s+car.vy*c,car.vx*c-car.vy*s),mix=car.vx>3?clamp(av/25,0,1)*0.35:0;
-  const want=car.yaw+wrapA(vw-car.yaw)*mix;camYawS+=wrapA(want-camYawS)*(1-Math.exp(-dt*5));
+  const want=car.yaw+wrapA(vw-car.yaw)*mix;camYawS+=wrapA(want-camYawS)*(1-Math.exp(-dt*9));
   const cs=Math.sin(camYawS),cc=Math.cos(camYawS);
   camera.fov=lerp(camera.fov,62+clamp(av/60,0,1)*12,dt*3);camera.updateProjectionMatrix();
   shake=lerp(shake,clamp((av-30)/40,0,1)*0.04+car.scrape*0.05,dt*4);
