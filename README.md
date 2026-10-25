@@ -9,3 +9,14 @@ Live at https://erictempleton1.github.io/cyber-alley/ — Pages serves the `gh-p
 Single `index.html`, Three.js loaded from a CDN, no build step.
 
 **Controls:** WASD to walk, Shift to run, drag to look, scroll to zoom, R to cycle rain. On touch, drag on the left half of the screen to walk.
+
+## Neon Circuit (`/drive/`)
+
+A night street-circuit driving game in the same neon city, starring a boxy late-80s E30 M3: box flares, trunk wing, quad round headlights and cross-spoke wheels. Live at https://erictempleton1.github.io/cyber-alley/drive/
+
+- **Fully synthesized sound** (no audio files): a 4-cylinder engine built from individual firing pulses through an exhaust-pipe resonance model, rev-limiter bounce, lift-off crackles, gearbox whine (including straight-cut reverse whine), tyre squeal, wind and wall scrapes.
+- Weight transfer, tyre grip limits and power oversteer; 5-speed auto or manual; optional stability assist (turn it off to drift).
+- Lap timer with last/best (best is saved), minimap, tachometer and digital speedo.
+- Wet reflective streets, optional rain (less grip), autopilot attract mode, keyboard / touch / gamepad.
+
+**Controls:** W/S gas & brake (hold S to reverse), A/D steer, Space handbrake, E/Q shift in manual (G toggles), C camera, R reset to track, P paint, U mph/km/h.
